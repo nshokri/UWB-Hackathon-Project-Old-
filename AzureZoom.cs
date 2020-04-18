@@ -8,8 +8,12 @@ public class AzureZoom
     private static readonly AzureKeyCredential credentials = new AzureKeyCredential("64734ee082bf42a9abff82815d309d9f");
     private static readonly Uri endpoint = new Uri("https://westcentralus.api.cognitive.microsoft.com/text/analytics");
     private var client;
-
-    public AzureZoom() => client = new TextAnalyticsClient(endpoint, credentials);
+    private ZoomInstance zoomController;
+    public AzureZoom(ZoomInstance zoomController)
+    {
+        client = new TextAnalyticsClient(endpoint, credentials);
+        zoomController = this.zoomController;
+    }
 
     /*This method will automatically be called every time a chat message is sent in Zoom*/
     //todo: Everytime a new chat message is sent, check how toxic it is, if it's too toxic,
@@ -19,9 +23,10 @@ public class AzureZoom
     public void newMessage(string message, int messageID)
     {
         DocumentSentiment documentSentiment = client.AnalyzeSentiment(message);
-        if(string.Equals(documentSentiment.Sentiment, "Negative"))
+        var sentence = documentSentiment.senteces[0];
+        if (sentence.ConfidenceScores.Negative == 1.00)
         {
-            // They are toxic, remove message
+            this.zoomController.deleteMessage(messageID);
         }
     }
 }
