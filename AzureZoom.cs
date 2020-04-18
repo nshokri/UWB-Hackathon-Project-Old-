@@ -11,8 +11,8 @@ public class AzureZoom
     private ZoomInstance zoomController;
     public AzureZoom(ZoomInstance zoomController)
     {
-        client = new TextAnalyticsClient(endpoint, credentials);
-        zoomController = this.zoomController;
+        this.client = new TextAnalyticsClient(endpoint, credentials);
+        this.zoomController = zoomController;
     }
 
     /*This method will automatically be called every time a chat message is sent in Zoom*/
@@ -22,7 +22,7 @@ public class AzureZoom
     //https://docs.microsoft.com/en-us/azure/cognitive-services/text-analytics/how-tos/text-analytics-how-to-sentiment-analysis?tabs=version-3
     public void newMessage(string message, int messageID)
     {
-        DocumentSentiment documentSentiment = client.AnalyzeSentiment(message);
+        DocumentSentiment documentSentiment = this.client.AnalyzeSentiment(message);
         var sentence = documentSentiment.senteces[0];
         if (sentence.ConfidenceScores.Negative == 1.00)
         {
