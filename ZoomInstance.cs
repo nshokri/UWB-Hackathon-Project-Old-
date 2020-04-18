@@ -1,4 +1,7 @@
-public interface ZoomInstance
+public class ZoomInstance
 {
-    public void deleteMessage(int messageID);
+    public void deleteMessage(int messageID)
+    {
+        
+    }
 }
